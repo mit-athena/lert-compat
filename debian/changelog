@@ -1,0 +1,5 @@
+debathena-lert-compat (10.1-0debathena1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Victor Vasiliev <vasilvv@mit.edu>  Tue, 11 Mar 2014 17:34:28 -0400
