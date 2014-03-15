@@ -23,6 +23,7 @@ LERT_TIMEOUT = 1
 LERT_SERVICE = 'daemon'
 LERT_PORT = 3717
 LERT_MAX_PACKET_SIZE = 2048
+LERT_MESSAGE_PATH_BASE = '/afs/athena/system/config/lert/lert'
 
 LERT_BAD = '0'
 LERT_FREE = '1'
@@ -88,7 +89,9 @@ def lert(server, acknowledge):
     if response_code == LERT_SICK:
         raise LertError("lert server is malfunctioning")
     if response_code == LERT_MSG:
-        return response[2:]
+        file_suffix = response[2:]
+        with open(LERT_MESSAGE_PATH_BASE + file_suffix, 'r') as f:
+            return f.read().strip()
     if response_code == LERT_FREE:
         return ""
     raise LertError("lert server returned invalid status code")
@@ -123,6 +126,10 @@ def main(args):
     try:
         message = lert(server, args.no)
         if message:
+            header_path = LERT_MESSAGE_PATH_BASE + ('1' if args.no else '0')
+            with open(header_path, 'r') as f:
+                print f.read().strip()
+            print
             print message
     except Exception as err:
         if not args.quiet:
